@@ -12,23 +12,28 @@ engine = pyttsx3.init()
 
 def speak(text):
     """
-    Convert text to speech.
+    Converts text to speech.
+    Arguments:
+    text -- The text to be spoken by the assistant.
     """
-    engine.setProperty('rate', 150)
-    engine.say(text)
-    engine.runAndWait()
+    engine.setProperty('rate', 150)  # Set speech rate (words per minute)
+    engine.say(text)  # Speak the text
+    engine.runAndWait()  # Wait for the speech to finish
 
 # Initialize the recognizer and translator
 recognizer = sr.Recognizer()
 translator = Translator()  # Initialize the translator
 
-# Function to play a beep sound
 def play_beep():
+    """
+    Plays a beep sound.
+    This is used to signal that the assistant is starting or performing an action.
+    """
     frequency = 1000  # Frequency of the beep in Hz
     duration = 500    # Duration of the beep in milliseconds
-    winsound.Beep(frequency, duration)
+    winsound.Beep(frequency, duration)  # Play the beep sound
 
-# Intents and responses
+# Intents and responses: These are mappings of user queries to appropriate responses or actions.
 intents = {
     "greeting": ["hello", "hi", "hey", "good morning", "good evening"],
     "farewell": ["bye", "goodbye", "see you later", "take care"],
@@ -77,6 +82,14 @@ responses = {
 }
 
 def get_intent(user_input):
+    """
+    Determines the intent behind the user input.
+    Arguments:
+    user_input -- The input from the user (text).
+    
+    Returns:
+    intent -- The identified intent (as a string), or None if no intent is found.
+    """
     for intent, phrases in intents.items():
         if any(phrase in user_input for phrase in phrases):
             return intent
@@ -94,23 +107,31 @@ def get_intent(user_input):
     
     return None
 
-
-
-
 def respond_to_intent(intent):
+    """
+    Responds based on the detected intent.
+    Arguments:
+    intent -- The identified intent (string).
+    
+    Returns:
+    response -- A random response from the defined responses for the given intent.
+    """
     if intent in responses:
         return random.choice(responses[intent])
     else:
         return "I'm sorry, I didn't understand that."
 
-
-
 def handle_knowledge_query(user_input):
     """
-    Fetch answers to general questions using Wikipedia.
+    Fetches answers to general knowledge queries using Wikipedia.
+    Arguments:
+    user_input -- The input from the user (text), usually a question.
+    
+    Returns:
+    summary -- A short Wikipedia summary of the query, or an error message if no information is found.
     """
     try:
-        # Extract query by removing common phrases
+        # Extract query by removing common question phrases
         query = user_input.replace("do you know", "").replace("what is", "").replace("who is", "").replace("tell me about", "").strip()
 
         if not query:
@@ -128,9 +149,15 @@ def handle_knowledge_query(user_input):
     except Exception as e:
         return f"An error occurred: {str(e)}"
 
-
-
 def handle_translation(user_input):
+    """
+    Handles translation requests.
+    Arguments:
+    user_input -- The input from the user, e.g., "translate hello to Spanish."
+    
+    Returns:
+    translation_output -- The translated text or an error message.
+    """
     try:
         # Example input: "translate hello to spanish"
         parts = user_input.split("translate")[1].strip().split(" to ")
@@ -161,7 +188,9 @@ def handle_translation(user_input):
 
 def recognize_speech():
     """
-    Convert speech to text using the microphone.
+    Converts speech to text using the microphone.
+    Returns:
+    text -- The recognized speech as text, or an empty string if no speech is detected.
     """
     with sr.Microphone() as source:
         recognizer.adjust_for_ambient_noise(source, duration=1)
@@ -183,34 +212,44 @@ def recognize_speech():
             return ""
 
 def handle_input():
-    play_beep()
-    user_input = recognize_speech()
+    """
+    Handles the input received from the user (speech-to-text, intent recognition, and response generation).
+    """
+    play_beep()  # Play a beep to signal that the assistant is listening
+    user_input = recognize_speech()  # Get the user's speech input
     if user_input:
-        intent = get_intent(user_input)
+        intent = get_intent(user_input)  # Determine the intent of the input
         if intent == "translate":
-            response = handle_translation(user_input)
+            response = handle_translation(user_input)  # Handle translation request
         elif intent == "knowledge_query":
-            response = handle_knowledge_query(user_input)
+            response = handle_knowledge_query(user_input)  # Handle knowledge query (Wikipedia search)
         else:
-            response = respond_to_intent(intent)
+            response = respond_to_intent(intent)  # Handle other intents like greetings, jokes, etc.
         
-        display_text(f"Siri: {response}")
-        speak(response)  # This will speak the response (avoiding duplication)
+        display_text(f"Siri: {response}")  # Display the response in the GUI
+        speak(response)  # Speak the response out loud
 
         # If the intent is "stop", close the application
         if intent == "stop":
             stop_assistant()
 
-
 def display_text(text):
+    """
+    Displays text in the GUI.
+    Arguments:
+    text -- The text to display in the output box.
+    """
     output_box.insert(END, text + "\n")
     output_box.see(END)
     output_box.insert(END, "\n")
 
 def stop_assistant():
-    display_text("Siri stopped.")
-    speak("Goodbye!")
-    app.quit()
+    """
+    Stops the assistant and closes the application.
+    """
+    display_text("Siri stopped.")  # Display that the assistant has stopped
+    speak("Goodbye!")  # Speak goodbye message
+    app.quit()  # Close the application
 
 # GUI Setup
 app = Tk()
