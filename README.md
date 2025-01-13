@@ -74,4 +74,5 @@ Commands:
 - Works best with clear speech and in relatively quiet environments.
 
 ![image](https://github.com/user-attachments/assets/f6927a7b-cdd8-48a2-849b-5e09e8f58cb5)
+![image](https://github.com/user-attachments/assets/96ced69f-35d5-4af2-9b04-a29c51e24c48)
 
