@@ -77,17 +77,16 @@ responses = {
 }
 
 def get_intent(user_input):
-    user_input = user_input.lower()
     for intent, phrases in intents.items():
         if any(phrase in user_input for phrase in phrases):
             return intent
     
     # Detect knowledge-based questions more flexibly
     knowledge_keywords = [
-        r"\bwhat is\b", r"\bwho is\b", r"\bhow does\b", r"\bhow is\b", 
-        r"\bdefine\b", r"\bexplain\b", r"\bdescribe\b", r"\bwhat are\b",
-        r"\bwhat's the meaning of\b", r"\bwhat do you know about\b", 
-        r"\bcan you explain\b", r"\bcan you tell me\b", r"\bwhat does\b"
+        "who is", "what is", "tell me about", "do you know", "explain", "define", 
+        "what's", "how does", "how is", "can you explain", "can you tell me", "describe", 
+        "give me information about", "give me details on", "what does", "what are", "what's the meaning of", 
+        "what do you know about", "how does it work", "how is it", "what's the definition of"
     ]
     
     if any(keyword in user_input for keyword in knowledge_keywords):
@@ -96,17 +95,20 @@ def get_intent(user_input):
     return None
 
 
+
+
 def respond_to_intent(intent):
     if intent in responses:
         return random.choice(responses[intent])
     else:
         return "I'm sorry, I didn't understand that."
 
+
+
 def handle_knowledge_query(user_input):
     """
     Fetch answers to general questions using Wikipedia.
     """
-    user_input = user_input.lower()
     try:
         # Extract query by removing common phrases
         query = user_input.replace("do you know", "").replace("what is", "").replace("who is", "").replace("tell me about", "").strip()
@@ -128,9 +130,7 @@ def handle_knowledge_query(user_input):
 
 
 
-
 def handle_translation(user_input):
-    user_input = user_input.lower()
     try:
         # Example input: "translate hello to spanish"
         parts = user_input.split("translate")[1].strip().split(" to ")
@@ -193,10 +193,9 @@ def handle_input():
             response = handle_knowledge_query(user_input)
         else:
             response = respond_to_intent(intent)
-
-        # Display and speak the response here
+        
         display_text(f"Siri: {response}")
-        speak(response)
+        speak(response)  # This will speak the response (avoiding duplication)
 
         # If the intent is "stop", close the application
         if intent == "stop":
