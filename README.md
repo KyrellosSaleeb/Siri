@@ -72,3 +72,6 @@ Commands:
 ## Limitations
 - This assistant is currently limited to handling a predefined set of commands (intents).
 - Works best with clear speech and in relatively quiet environments.
+
+![image](https://github.com/user-attachments/assets/f6927a7b-cdd8-48a2-849b-5e09e8f58cb5)
+
